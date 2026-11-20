@@ -4,21 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CS Performance Analytics</title>
+  <script src="[https://cdn.jsdelivr.net/npm/chart.js](https://cdn.jsdelivr.net/npm/chart.js)"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f6f9;
       margin: 0;
       color: #1f2937;
     }
-
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
+    .layout { display: flex; min-height: 100vh; }
 
     .sidebar {
       width: 220px;
@@ -37,11 +32,7 @@
       margin-bottom: 24px;
       padding-left: 10px;
     }
-    .menu-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .menu-list { display: flex; flex-direction: column; gap: 8px; }
     .menu-btn {
       width: 100%;
       text-align: left;
@@ -54,9 +45,7 @@
       color: #374151;
       cursor: pointer;
     }
-    .menu-btn:hover {
-      background-color: #f1f5f9;
-    }
+    .menu-btn:hover { background-color: #f1f5f9; }
     .menu-btn.aktif {
       background-color: #dbeafe;
       border-color: #93c5fd;
@@ -74,15 +63,9 @@
       color: #b91c1c;
       cursor: pointer;
     }
-    .logout-btn:hover {
-      background-color: #fef2f2;
-    }
+    .logout-btn:hover { background-color: #fef2f2; }
 
-    .konten {
-      flex: 1;
-      padding: 24px;
-      overflow-x: auto;
-    }
+    .konten { flex: 1; padding: 24px; overflow-x: auto; }
     .halaman {
       display: none;
       background: #ffffff;
@@ -90,9 +73,7 @@
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
-    .halaman.aktif {
-      display: block;
-    }
+    .halaman.aktif { display: block; }
 
     .header-halaman {
       display: flex;
@@ -100,10 +81,7 @@
       align-items: center;
       margin-bottom: 14px;
     }
-    .header-halaman h1 {
-      margin: 0;
-      font-size: 22px;
-    }
+    .header-halaman h1 { margin: 0; font-size: 22px; }
     .tombol-upload {
       background-color: #1d4ed8;
       color: #ffffff;
@@ -114,30 +92,13 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .tombol-upload:hover:not(:disabled) {
-      background-color: #1e40af;
-    }
-    .tombol-upload:disabled {
-      background-color: #93c5fd;
-      cursor: not-allowed;
-    }
-    #fileTxt {
-      display: none;
-    }
-    .info-file {
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 14px;
-    }
+    .tombol-upload:hover:not(:disabled) { background-color: #1e40af; }
+    .tombol-upload:disabled { background-color: #93c5fd; cursor: not-allowed; }
+    #fileTxt { display: none; }
+    .info-file { font-size: 13px; color: #4b5563; margin-bottom: 14px; }
 
-    .bungkus-tabel {
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1150px;
-    }
+    .bungkus-tabel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1180px; }
     th, td {
       border: 1px solid #cbd5e1;
       padding: 10px 12px;
@@ -145,13 +106,8 @@
       font-size: 13px;
       vertical-align: top;
     }
-    th {
-      background-color: #e2e8f0;
-      font-weight: bold;
-    }
-    tr:nth-child(even) {
-      background-color: #f8fafc;
-    }
+    th { background-color: #e2e8f0; font-weight: bold; }
+    tr:nth-child(even) { background-color: #f8fafc; }
 
     .grid-metrik {
       display: grid;
@@ -169,27 +125,34 @@
       flex-direction: column;
       justify-content: space-between;
     }
-    .judul-metrik {
-      font-size: 13px;
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 10px;
+    .judul-metrik { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 10px; }
+    .nilai-metrik { font-size: 22px; font-weight: bold; color: #0f172a; }
+    .catatan-metrik { font-size: 12px; color: #64748b; margin-top: 8px; }
+
+    .area-chart {
+      margin-top: 22px;
+      border: 1px solid #cbd5e1;
+      background-color: #f8fafc;
+      border-radius: 10px;
+      padding: 20px;
     }
-    .nilai-metrik {
-      font-size: 22px;
-      font-weight: bold;
+    .area-chart h2 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
       color: #0f172a;
     }
-    .catatan-metrik {
+    .subjudul-chart {
       font-size: 12px;
       color: #64748b;
-      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    .bungkus-canvas {
+      max-width: 380px;
+      margin: 0 auto;
     }
 
     @media (max-width: 900px) {
-      .grid-metrik {
-        grid-template-columns: 1fr;
-      }
+      .grid-metrik { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -200,19 +163,12 @@
       <div>
         <div class="brand">CS Analytics</div>
         <div class="menu-list">
-          <button id="btnDataset" class="menu-btn aktif" onclick="pindahHalaman('dataset')">
-            Dataset
-          </button>
-          <button id="btnDashboard" class="menu-btn" onclick="pindahHalaman('dashboard')">
-            Dashboard
-          </button>
+          <button id="btnDataset" class="menu-btn aktif" onclick="pindahHalaman('dataset')">Dataset</button>
+          <button id="btnDashboard" class="menu-btn" onclick="pindahHalaman('dashboard')">Dashboard</button>
         </div>
       </div>
-
       <div>
-        <button class="logout-btn" onclick="aksiLogout()">
-          Logout
-        </button>
+        <button class="logout-btn" onclick="aksiLogout()">Logout</button>
       </div>
     </aside>
 
@@ -228,9 +184,7 @@
           </div>
         </div>
 
-        <div class="info-file" id="statusFile">
-          Belum ada file .txt yang diunggah.
-        </div>
+        <div class="info-file" id="statusFile">Belum ada file .txt yang diunggah.</div>
 
         <div class="bungkus-tabel">
           <table>
@@ -243,8 +197,8 @@
                 <th>First Response Time (FRT)</th>
                 <th>Average Response Time (ART)</th>
                 <th>Payment Status</th>
-                <th>Drop-off Rate per Tahapan</th>
                 <th>Lead Qualification Rate</th>
+                <th>Drop-off Rate per Tahapan</th>
               </tr>
             </thead>
             <tbody id="isiTabel"></tbody>
@@ -257,62 +211,54 @@
           <h1>Dashboard</h1>
         </div>
         <div class="info-file" id="infoSumberDashboard">
-          Sumber data otomatis dari tabel Dataset (total baris: 0).
+          Sumber data otomatis dari tabel Dataset (total leads: 0).
         </div>
 
         <div class="grid-metrik">
           <div class="kartu-metrik">
-            <div class="judul-metrik">Total Customer / Data</div>
-            <div class="nilai-metrik" id="mTotalData">0</div>
-            <div class="catatan-metrik">Jumlah baris pada Dataset</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">Latest Sales Cycle Length</div>
-            <div class="nilai-metrik" id="mSalesCycle">-</div>
-            <div class="catatan-metrik">Ringkasan dari kolom Sales Cycle Length</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">Abandoned Cart / Quote Recovery Rate</div>
-            <div class="nilai-metrik" id="mRecoveryRate">-</div>
-            <div class="catatan-metrik">Rata-rata dari Dataset</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">First Response Time (FRT)</div>
-            <div class="nilai-metrik" id="mFrt">-</div>
-            <div class="catatan-metrik">Respon pertama terbaru</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">Average Response Time (ART)</div>
-            <div class="nilai-metrik" id="mArt">-</div>
-            <div class="catatan-metrik">Rata-rata respon terbaru</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">Payment Status Summary</div>
-            <div class="nilai-metrik" id="mPayment">-</div>
-            <div class="catatan-metrik">Distribusi status pembayaran</div>
-          </div>
-
-          <div class="kartu-metrik">
-            <div class="judul-metrik">Drop-off Rate per Tahapan</div>
-            <div class="nilai-metrik" id="mDropOff">-</div>
-            <div class="catatan-metrik">Rata-rata drop-off dari Dataset</div>
+            <div class="judul-metrik">Conversion Rate</div>
+            <div class="nilai-metrik" id="mConversionRate">0%</div>
+            <div class="catatan-metrik">(Payment Success / All Leads) × 100%</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Lead Qualification Rate</div>
-            <div class="nilai-metrik" id="mLeadQual">-</div>
-            <div class="catatan-metrik">Rata-rata kualifikasi lead</div>
+            <div class="nilai-metrik" id="mLeadQual">0%</div>
+            <div class="catatan-metrik">(Qualified / All Leads) × 100%</div>
           </div>
 
           <div class="kartu-metrik">
-            <div class="judul-metrik">Status Analisa AI</div>
-            <div class="nilai-metrik" id="mStatusAi">Siap</div>
-            <div class="catatan-metrik">Terhubung ke Apps Script + Gemini</div>
+            <div class="judul-metrik">Total All Leads</div>
+            <div class="nilai-metrik" id="mTotalData">0</div>
+            <div class="catatan-metrik">Total percakapan customer di Dataset</div>
+          </div>
+
+          <div class="kartu-metrik">
+            <div class="judul-metrik">Rata-rata FRT (Menit)</div>
+            <div class="nilai-metrik" id="mFrt">-</div>
+            <div class="catatan-metrik">Rata-rata First Response Time</div>
+          </div>
+
+          <div class="kartu-metrik">
+            <div class="judul-metrik">Rata-rata ART (Menit)</div>
+            <div class="nilai-metrik" id="mArt">-</div>
+            <div class="catatan-metrik">Rata-rata Average Response Time</div>
+          </div>
+
+          <div class="kartu-metrik">
+            <div class="judul-metrik">Abandoned Cart Recovery</div>
+            <div class="nilai-metrik" id="mRecovery">0 Won / 0 Failed</div>
+            <div class="catatan-metrik">Distribusi hasil follow-up invoice</div>
+          </div>
+        </div>
+
+        <div class="area-chart">
+          <h2>Conversion Rate Chart</h2>
+          <div class="subjudul-chart" id="labelChartDetail">
+            Conversion Rate: 0% (0 Success dari 0 All Leads)
+          </div>
+          <div class="bungkus-canvas">
+            <canvas id="chartConversionRate"></canvas>
           </div>
         </div>
       </section>
@@ -322,6 +268,7 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwncB9KrWbnmyVfqe0nN5b_OII9zeJHi2AUXmb6F9FWq9kVYBoYU4cIng8Upg83TO0Qw/exec";
     let dataDataset = [];
+    let chartConvInstance = null;
 
     function pindahHalaman(tujuan) {
       const halDataset = document.getElementById("halamanDataset");
@@ -370,51 +317,108 @@
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${index + 1}</td>
-            <td>${row.nama ?? "-"}</td>
-            <td>${row.salesCycleLength ?? "-"}</td>
-            <td>${row.recoveryRate ?? "-"}</td>
-            <td>${row.frt ?? "-"}</td>
-            <td>${row.art ?? "-"}</td>
-            <td>${row.paymentStatus ?? "-"}</td>
-            <td>${row.dropOffRate ?? "-"}</td>
-            <td>${row.leadQualificationRate ?? "-"}</td>
+            <td>${row.nama ?? "NA"}</td>
+            <td>${row.salesCycleLength ?? "NA"}</td>
+            <td>${row.recoveryRate ?? "NA"}</td>
+            <td>${row.frt ?? "NA"}</td>
+            <td>${row.art ?? "NA"}</td>
+            <td>${row.paymentStatus ?? "NA"}</td>
+            <td>${row.leadQualificationRate ?? "NA"}</td>
+            <td>${row.dropOffRate ?? "NA"}</td>
           `;
           tbody.appendChild(tr);
         });
       }
 
       document.getElementById("infoSumberDashboard").innerText =
-        "Sumber data otomatis dari tabel Dataset (total baris: " + dataDataset.length + ").";
+        "Sumber data otomatis dari tabel Dataset (total leads: " + dataDataset.length + ").";
     }
 
-    function ambilAngkaPersen(teks) {
-      const angka = parseFloat(String(teks || "").replace("%", "").replace(",", "."));
-      return isNaN(angka) ? null : angka;
+    function hitungRataRataMenit(field) {
+      const angkaValid = dataDataset
+        .map(item => parseFloat(String(item[field] ?? "").replace(",", ".")))
+        .filter(val => !isNaN(val));
+
+      if (angkaValid.length === 0) return "-";
+      const total = angkaValid.reduce((sum, val) => sum + val, 0);
+      return (total / angkaValid.length).toFixed(1).replace(".0", "") + " menit";
     }
 
-    function hitungRataRataPersen(field) {
-      const nilaiValid = dataDataset
-        .map(item => ambilAngkaPersen(item[field]))
-        .filter(val => val !== null);
+    function renderChartConversionRate(successCount, canceledCount, naCount, conversionRate) {
+      const ctx = document.getElementById("chartConversionRate").getContext("2d");
+      if (chartConvInstance) {
+        chartConvInstance.destroy();
+      }
 
-      if (nilaiValid.length === 0) return "-";
-      const total = nilaiValid.reduce((sum, val) => sum + val, 0);
-      return (total / nilaiValid.length).toFixed(1).replace(".0", "") + "%";
+      const belumData = successCount + canceledCount + naCount === 0;
+      const dataValues = belumData ? [1] : [successCount, canceledCount, naCount];
+      const labels = belumData
+        ? ["Belum ada data"]
+        : ["Success (" + conversionRate + "%)", "Canceled", "NA"];
+      const colors = belumData
+        ? ["#cbd5e1"]
+        : ["#16a34a", "#dc2626", "#94a3b8"];
+
+      chartConvInstance = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: dataValues,
+            backgroundColor: colors,
+            borderWidth: 2,
+            borderColor: "#ffffff"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
     }
 
     function perbaruiDashboard() {
-      document.getElementById("mTotalData").innerText = dataDataset.length;
-      document.getElementById("mRecoveryRate").innerText = hitungRataRataPersen("recoveryRate");
-      document.getElementById("mDropOff").innerText = hitungRataRataPersen("dropOffRate");
-      document.getElementById("mLeadQual").innerText = hitungRataRataPersen("leadQualificationRate");
+      const allLeads = dataDataset.length;
 
-      const terakhir = dataDataset[dataDataset.length - 1] || {};
-      const payList = dataDataset.map(d => d.paymentStatus).filter(Boolean);
+      const successCount = dataDataset.filter(
+        d => String(d.paymentStatus || "").trim().toLowerCase() === "success"
+      ).length;
+      const canceledCount = dataDataset.filter(
+        d => String(d.paymentStatus || "").trim().toLowerCase() === "canceled"
+      ).length;
+      const naCount = allLeads - successCount - canceledCount;
 
-      document.getElementById("mSalesCycle").innerText = terakhir.salesCycleLength || "-";
-      document.getElementById("mFrt").innerText = terakhir.frt || "-";
-      document.getElementById("mArt").innerText = terakhir.art || "-";
-      document.getElementById("mPayment").innerText = payList.length ? payList.join(", ") : "-";
+      const conversionRate = allLeads > 0
+        ? ((successCount / allLeads) * 100).toFixed(1).replace(".0", "")
+        : "0";
+
+      const qualifiedCount = dataDataset.filter(
+        d => String(d.leadQualificationRate || "").trim().toLowerCase() === "qualified"
+      ).length;
+      const leadQualRate = allLeads > 0
+        ? ((qualifiedCount / allLeads) * 100).toFixed(1).replace(".0", "")
+        : "0";
+
+      const wonCount = dataDataset.filter(
+        d => String(d.recoveryRate || "").trim().toLowerCase() === "won"
+      ).length;
+      const failedCount = dataDataset.filter(
+        d => String(d.recoveryRate || "").trim().toLowerCase() === "failed"
+      ).length;
+
+      document.getElementById("mConversionRate").innerText = conversionRate + "%";
+      document.getElementById("mLeadQual").innerText = leadQualRate + "%";
+      document.getElementById("mTotalData").innerText = allLeads;
+      document.getElementById("mFrt").innerText = hitungRataRataMenit("frt");
+      document.getElementById("mArt").innerText = hitungRataRataMenit("art");
+      document.getElementById("mRecovery").innerText = wonCount + " Won / " + failedCount + " Failed";
+
+      document.getElementById("labelChartDetail").innerText =
+        "Conversion Rate: " + conversionRate + "% (" + successCount + " Success dari " + allLeads + " All Leads)";
+
+      renderChartConversionRate(successCount, canceledCount, naCount, conversionRate);
     }
 
     async function saatFileDipilih(event) {
@@ -436,12 +440,10 @@
 
       const btnUpload = document.getElementById("btnUpload");
       const statusEl = document.getElementById("statusFile");
-      const statusAiEl = document.getElementById("mStatusAi");
-
       const isiTeks = await file.text();
+
       btnUpload.disabled = true;
-      statusEl.innerText = "Mengirim " + file.name + " ke Gemini AI & Google Sheet...";
-      statusAiEl.innerText = "Memproses...";
+      statusEl.innerText = "Menganalisa " + file.name + " dengan Gemini AI...";
 
       try {
         const res = await fetch(APPS_SCRIPT_URL, {
@@ -454,18 +456,16 @@
         });
 
         const hasil = await res.json();
-        if (hasil.status !== "ok" || !hasil.row) {
+        if (hasil.status !== "ok" || !Array.isArray(hasil.rows)) {
           throw new Error(hasil.message || "Respon tidak valid dari Apps Script.");
         }
 
-        dataDataset.push(hasil.row);
+        dataDataset.push(...hasil.rows);
         renderTabelDataset();
         perbaruiDashboard();
-        statusEl.innerText = "Selesai! Data dari " + file.name + " tersimpan ke Google Sheet & tabel Dataset.";
-        statusAiEl.innerText = "Sukses";
+        statusEl.innerText = "Selesai! " + hasil.rows.length + " data dari " + file.name + " tersimpan ke Google Sheet & Dataset.";
       } catch (err) {
         statusEl.innerText = "Gagal memproses file: " + err.message;
-        statusAiEl.innerText = "Error";
         alert("Terjadi kendala saat memproses file: " + err.message);
       } finally {
         btnUpload.disabled = false;
