@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dataset - Database Customer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 24px;
+      color: #1f2937;
+    }
+    .wadah {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    .bagian-atas {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .bagian-atas h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .tombol-upload {
+      background-color: #1d4ed8;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tombol-upload:hover {
+      background-color: #1e40af;
+    }
+    #fileTxt {
+      display: none;
+    }
+    .info-file {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+    .bungkus-tabel {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1150px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #e2e8f0;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wadah">
+    <div class="bagian-atas">
+      <h1>Dataset</h1>
+      <div>
+        <button class="tombol-upload" onclick="document.getElementById('fileTxt').click()">
+          Upload Doc (.txt)
+        </button>
+        <input type="file" id="fileTxt" accept=".txt" onchange="saatFileDipilih(event)">
+      </div>
+    </div>
+
+    <div class="info-file" id="statusFile">
+      Belum ada file .txt yang diunggah.
+    </div>
+
+    <div class="bungkus-tabel">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Sales Cycle Length</th>
+            <th>Abandoned Cart / Quote Recovery Rate</th>
+            <th>First Response Time (FRT)</th>
+            <th>Average Response Time (ART)</th>
+            <th>Payment Status</th>
+            <th>Drop-off Rate per Tahapan</th>
+            <th>Lead Qualification Rate</th>
+          </tr>
+        </thead>
+        <tbody id="isiTabel">
+          <tr>
+            <td>1</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function saatFileDipilih(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.name.toLowerCase().endsWith(".txt")) {
+        alert("Harap pilih file berformat .txt");
+        return;
+      }
+
+      const pembaca = new FileReader();
+      pembaca.onload = function(e) {
+        const teks = e.target.result;
+        document.getElementById("statusFile").innerText =
+          "File terbaca: " + file.name + " (Siap dikirim ke n8n + AI)";
+
+        // Contoh tampilan sementara sebelum tersambung ke n8n
+        document.getElementById("isiTabel").innerHTML = `
+          <tr>
+            <td>1</td>
+            <td>(Dari: ${file.name})</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+            <td>Menunggu AI</td>
+          </tr>
+        `;
+      };
+      pembaca.readAsText(file);
+    }
+  </script>
+
+</body>
+</html>
