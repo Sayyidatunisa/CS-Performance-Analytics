@@ -15,13 +15,11 @@
       color: #1f2937;
     }
 
-    /* Tata letak utama: Sidebar kiri + Konten kanan */
     .layout {
       display: flex;
       min-height: 100vh;
     }
 
-    /* Sidebar Kiri */
     .sidebar {
       width: 220px;
       background-color: #ffffff;
@@ -80,7 +78,6 @@
       background-color: #fef2f2;
     }
 
-    /* Area Konten Kanan */
     .konten {
       flex: 1;
       padding: 24px;
@@ -97,7 +94,6 @@
       display: block;
     }
 
-    /* Header halaman */
     .header-halaman {
       display: flex;
       justify-content: space-between;
@@ -118,8 +114,12 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .tombol-upload:hover {
+    .tombol-upload:hover:not(:disabled) {
       background-color: #1e40af;
+    }
+    .tombol-upload:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
     }
     #fileTxt {
       display: none;
@@ -130,7 +130,6 @@
       margin-bottom: 14px;
     }
 
-    /* Tabel Dataset */
     .bungkus-tabel {
       overflow-x: auto;
     }
@@ -154,7 +153,6 @@
       background-color: #f8fafc;
     }
 
-    /* Grid Kartu Metrik di Dashboard */
     .grid-metrik {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -198,7 +196,6 @@
 <body>
 
   <div class="layout">
-    <!-- Menu Samping Kiri -->
     <aside class="sidebar">
       <div>
         <div class="brand">CS Analytics</div>
@@ -219,15 +216,12 @@
       </div>
     </aside>
 
-    <!-- Konten Kanan -->
     <main class="konten">
-
-      <!-- HALAMAN 1: DATASET -->
       <section id="halamanDataset" class="halaman aktif">
         <div class="header-halaman">
           <h1>Dataset</h1>
           <div>
-            <button class="tombol-upload" onclick="document.getElementById('fileTxt').click()">
+            <button id="btnUpload" class="tombol-upload" onclick="document.getElementById('fileTxt').click()">
               Upload Doc (.txt)
             </button>
             <input type="file" id="fileTxt" accept=".txt" onchange="saatFileDipilih(event)">
@@ -253,107 +247,81 @@
                 <th>Lead Qualification Rate</th>
               </tr>
             </thead>
-            <tbody id="isiTabel">
-              <tr>
-                <td>1</td>
-                <td>Contoh Customer</td>
-                <td>3 hari</td>
-                <td>50%</td>
-                <td>2 menit</td>
-                <td>5 menit</td>
-                <td>Paid</td>
-                <td>20%</td>
-                <td>75%</td>
-              </tr>
-            </tbody>
+            <tbody id="isiTabel"></tbody>
           </table>
         </div>
       </section>
 
-      <!-- HALAMAN 2: DASHBOARD -->
       <section id="halamanDashboard" class="halaman">
         <div class="header-halaman">
           <h1>Dashboard</h1>
         </div>
         <div class="info-file" id="infoSumberDashboard">
-          Sumber data otomatis dari tabel Dataset (total baris: 1).
+          Sumber data otomatis dari tabel Dataset (total baris: 0).
         </div>
 
         <div class="grid-metrik">
           <div class="kartu-metrik">
             <div class="judul-metrik">Total Customer / Data</div>
-            <div class="nilai-metrik" id="mTotalData">1</div>
+            <div class="nilai-metrik" id="mTotalData">0</div>
             <div class="catatan-metrik">Jumlah baris pada Dataset</div>
           </div>
 
           <div class="kartu-metrik">
-            <div class="judul-metrik">Avg Sales Cycle Length</div>
-            <div class="nilai-metrik" id="mSalesCycle">3 hari</div>
+            <div class="judul-metrik">Latest Sales Cycle Length</div>
+            <div class="nilai-metrik" id="mSalesCycle">-</div>
             <div class="catatan-metrik">Ringkasan dari kolom Sales Cycle Length</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Abandoned Cart / Quote Recovery Rate</div>
-            <div class="nilai-metrik" id="mRecoveryRate">50%</div>
+            <div class="nilai-metrik" id="mRecoveryRate">-</div>
             <div class="catatan-metrik">Rata-rata dari Dataset</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">First Response Time (FRT)</div>
-            <div class="nilai-metrik" id="mFrt">2 menit</div>
-            <div class="catatan-metrik">Rata-rata respon pertama</div>
+            <div class="nilai-metrik" id="mFrt">-</div>
+            <div class="catatan-metrik">Respon pertama terbaru</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Average Response Time (ART)</div>
-            <div class="nilai-metrik" id="mArt">5 menit</div>
-            <div class="catatan-metrik">Rata-rata respon keseluruhan</div>
+            <div class="nilai-metrik" id="mArt">-</div>
+            <div class="catatan-metrik">Rata-rata respon terbaru</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Payment Status Summary</div>
-            <div class="nilai-metrik" id="mPayment">1 Paid</div>
+            <div class="nilai-metrik" id="mPayment">-</div>
             <div class="catatan-metrik">Distribusi status pembayaran</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Drop-off Rate per Tahapan</div>
-            <div class="nilai-metrik" id="mDropOff">20%</div>
+            <div class="nilai-metrik" id="mDropOff">-</div>
             <div class="catatan-metrik">Rata-rata drop-off dari Dataset</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Lead Qualification Rate</div>
-            <div class="nilai-metrik" id="mLeadQual">75%</div>
+            <div class="nilai-metrik" id="mLeadQual">-</div>
             <div class="catatan-metrik">Rata-rata kualifikasi lead</div>
           </div>
 
           <div class="kartu-metrik">
             <div class="judul-metrik">Status Analisa AI</div>
-            <div class="nilai-metrik" id="mStatusAi">Contoh Awal</div>
-            <div class="catatan-metrik">Siap dihubungkan ke n8n</div>
+            <div class="nilai-metrik" id="mStatusAi">Siap</div>
+            <div class="catatan-metrik">Terhubung ke Apps Script + Gemini</div>
           </div>
         </div>
       </section>
-
     </main>
   </div>
 
   <script>
-    // Data awal di memori web (nanti akan diisi hasil analisa AI dari n8n)
-    let dataDataset = [
-      {
-        no: 1,
-        nama: "Contoh Customer",
-        salesCycleLength: "3 hari",
-        recoveryRate: "50%",
-        frt: "2 menit",
-        art: "5 menit",
-        paymentStatus: "Paid",
-        dropOffRate: "20%",
-        leadQualificationRate: "75%"
-      }
-    ];
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwncB9KrWbnmyVfqe0nN5b_OII9zeJHi2AUXmb6F9FWq9kVYBoYU4cIng8Upg83TO0Qw/exec";
+    let dataDataset = [];
 
     function pindahHalaman(tujuan) {
       const halDataset = document.getElementById("halamanDataset");
@@ -376,35 +344,51 @@
     }
 
     function aksiLogout() {
-      alert("Kamu menekan tombol Logout (fitur login/logout bisa ditambahkan nanti jika dibutuhkan).");
+      alert("Logout berhasil.");
     }
 
     function renderTabelDataset() {
       const tbody = document.getElementById("isiTabel");
       tbody.innerHTML = "";
 
-      dataDataset.forEach((row, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${row.nama}</td>
-          <td>${row.salesCycleLength}</td>
-          <td>${row.recoveryRate}</td>
-          <td>${row.frt}</td>
-          <td>${row.art}</td>
-          <td>${row.paymentStatus}</td>
-          <td>${row.dropOffRate}</td>
-          <td>${row.leadQualificationRate}</td>
+      if (dataDataset.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td>1</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
         `;
-        tbody.appendChild(tr);
-      });
+      } else {
+        dataDataset.forEach((row, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${row.nama ?? "-"}</td>
+            <td>${row.salesCycleLength ?? "-"}</td>
+            <td>${row.recoveryRate ?? "-"}</td>
+            <td>${row.frt ?? "-"}</td>
+            <td>${row.art ?? "-"}</td>
+            <td>${row.paymentStatus ?? "-"}</td>
+            <td>${row.dropOffRate ?? "-"}</td>
+            <td>${row.leadQualificationRate ?? "-"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
 
       document.getElementById("infoSumberDashboard").innerText =
         "Sumber data otomatis dari tabel Dataset (total baris: " + dataDataset.length + ").";
     }
 
     function ambilAngkaPersen(teks) {
-      const angka = parseFloat(String(teks).replace("%", "").replace(",", "."));
+      const angka = parseFloat(String(teks || "").replace("%", "").replace(",", "."));
       return isNaN(angka) ? null : angka;
     }
 
@@ -424,52 +408,73 @@
       document.getElementById("mDropOff").innerText = hitungRataRataPersen("dropOffRate");
       document.getElementById("mLeadQual").innerText = hitungRataRataPersen("leadQualificationRate");
 
-      // Ringkasan teks sederhana untuk kolom non-persen
-      const salesList = dataDataset.map(d => d.salesCycleLength).filter(Boolean);
-      const frtList = dataDataset.map(d => d.frt).filter(Boolean);
-      const artList = dataDataset.map(d => d.art).filter(Boolean);
+      const terakhir = dataDataset[dataDataset.length - 1] || {};
       const payList = dataDataset.map(d => d.paymentStatus).filter(Boolean);
 
-      document.getElementById("mSalesCycle").innerText = salesList.length ? salesList[salesList.length - 1] : "-";
-      document.getElementById("mFrt").innerText = frtList.length ? frtList[frtList.length - 1] : "-";
-      document.getElementById("mArt").innerText = artList.length ? artList[artList.length - 1] : "-";
+      document.getElementById("mSalesCycle").innerText = terakhir.salesCycleLength || "-";
+      document.getElementById("mFrt").innerText = terakhir.frt || "-";
+      document.getElementById("mArt").innerText = terakhir.art || "-";
       document.getElementById("mPayment").innerText = payList.length ? payList.join(", ") : "-";
     }
 
-    function saatFileDipilih(event) {
-      const file = event.target.files[0];
+    async function saatFileDipilih(event) {
+      const inputEl = event.target;
+      const file = inputEl.files[0];
       if (!file) return;
 
       if (!file.name.toLowerCase().endsWith(".txt")) {
         alert("Harap pilih file berformat .txt");
+        inputEl.value = "";
         return;
       }
 
-      const pembaca = new FileReader();
-      pembaca.onload = function(e) {
-        const isiTeks = e.target.result;
-        document.getElementById("statusFile").innerText =
-          "File terbaca: " + file.name + " (" + isiTeks.length + " karakter) — Menunggu sambungan ke n8n + AI.";
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("TEMPEL_URL_WEB_APP_KAMU_DI_SINI")) {
+        alert("URL Apps Script belum dipasang di kode index.html.");
+        inputEl.value = "";
+        return;
+      }
 
-        // Simulasi penambahan baris baru ke Dataset sebelum terhubung ke n8n
-        dataDataset.push({
-          no: dataDataset.length + 1,
-          nama: "Lead dari " + file.name,
-          salesCycleLength: "Menunggu AI",
-          recoveryRate: "0%",
-          frt: "Menunggu AI",
-          art: "Menunggu AI",
-          paymentStatus: "Pending",
-          dropOffRate: "0%",
-          leadQualificationRate: "0%"
+      const btnUpload = document.getElementById("btnUpload");
+      const statusEl = document.getElementById("statusFile");
+      const statusAiEl = document.getElementById("mStatusAi");
+
+      const isiTeks = await file.text();
+      btnUpload.disabled = true;
+      statusEl.innerText = "Mengirim " + file.name + " ke Gemini AI & Google Sheet...";
+      statusAiEl.innerText = "Memproses...";
+
+      try {
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            namaFile: file.name,
+            teks: isiTeks
+          })
         });
 
+        const hasil = await res.json();
+        if (hasil.status !== "ok" || !hasil.row) {
+          throw new Error(hasil.message || "Respon tidak valid dari Apps Script.");
+        }
+
+        dataDataset.push(hasil.row);
         renderTabelDataset();
         perbaruiDashboard();
-        document.getElementById("mStatusAi").innerText = "File Diupload";
-      };
-      pembaca.readAsText(file);
+        statusEl.innerText = "Selesai! Data dari " + file.name + " tersimpan ke Google Sheet & tabel Dataset.";
+        statusAiEl.innerText = "Sukses";
+      } catch (err) {
+        statusEl.innerText = "Gagal memproses file: " + err.message;
+        statusAiEl.innerText = "Error";
+        alert("Terjadi kendala saat memproses file: " + err.message);
+      } finally {
+        btnUpload.disabled = false;
+        inputEl.value = "";
+      }
     }
+
+    renderTabelDataset();
+    perbaruiDashboard();
   </script>
 
 </body>
